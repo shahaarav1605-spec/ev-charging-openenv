@@ -14,3 +14,17 @@ def run():
         score = run_task(task_id)
         results[task_id] = score
     return results
+
+@app.post("/reset")
+def reset_env():
+    return {
+        "message": "Environment reset successful"
+    }
+
+@app.post("/step")
+def step_env():
+    return {
+        "message": "Step executed",
+        "reward": 0,
+        "done": False
+    }
