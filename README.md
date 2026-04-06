@@ -136,7 +136,7 @@ docker build -t ev-agent .
 ### 🔹 3. Run the Container
 
 ```bash
-docker run -p 8000:7860 ev-agent
+docker run -p 9000:7860 ev-agent
 ```
 
 ---
@@ -144,7 +144,7 @@ docker run -p 8000:7860 ev-agent
 ### 🔹 4. Open in Browser
 
 ```text
-http://localhost:8000
+http://localhost:9000
 ```
 
 ---
