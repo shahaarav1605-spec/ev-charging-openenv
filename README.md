@@ -116,7 +116,16 @@ ev-charging-openenv/
 
 ## 🚀 How to Run
 
-### 1️⃣ Build Docker Image
+### 🔹 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/ev-charging-openenv.git
+cd ev-charging-openenv
+```
+
+---
+
+### 🔹 2. Build Docker Image
 
 ```bash
 docker build -t ev-agent .
@@ -124,31 +133,43 @@ docker build -t ev-agent .
 
 ---
 
-### 2️⃣ Run the Container
+### 🔹 3. Run the Container
 
 ```bash
-docker run -p 8000:8000 -e HF_TOKEN=your_token ev-agent
+docker run -p 8000:7860 ev-agent
 ```
 
-> 🔑 Replace `your_token` with your HuggingFace token (optional)
+---
+
+### 🔹 4. Open in Browser
+
+```text
+http://localhost:8000
+```
 
 ---
 
-### 3️⃣ Open API in Browser
+### 🔹 5. Test API Endpoint
 
-Go to:
+```text
+http://localhost:8000/optimize
+```
 
-http://localhost:8000/docs
+---
+
+## 📌 Notes
+
+* The application runs internally on port **7860**
+* Port **8000 is mapped** for local access
+* No Hugging Face token is required for this project
 
 ---
 
-### 4️⃣ Run the Agent
+## 🌐 Live Demo
 
-- Click **GET /run**
-- Click **Try it out**
-- Click **Execute**
+* 🔗 Main App: https://aarav-2273-ev-charging-agent.hf.space/
+* ⚡ Optimize API: https://aarav-2273-ev-charging-agent.hf.space/optimize
 
----
 
 ### ✅ Expected Output
 
@@ -159,10 +180,6 @@ http://localhost:8000/docs
   "hard": 0.25
 }
 ```
-## 🚀 Live Demo
-
-- 🔗 Main App: https://aarav-2273-ev-charging-agent.hf.space/
-- ⚡ Optimize API: https://aarav-2273-ev-charging-agent.hf.space/optimize
 
 ### 📸 Output Screenshot
 
