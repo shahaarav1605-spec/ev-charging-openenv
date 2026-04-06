@@ -1,5 +1,7 @@
 # ⚡ EV Charging Optimization Agent
 
+AI-powered EV Charging Optimization Agent using Reinforcement Learning.
+
 ## 📌 Overview
 
 The EV Charging Optimization Agent is an intelligent system designed to optimize electric vehicle (EV) charging strategies in real time.
