@@ -170,6 +170,33 @@ http://localhost:8000/optimize
 * 🔗 Main App: https://aarav-2273-ev-charging-agent.hf.space/
 * ⚡ Optimize API: https://aarav-2273-ev-charging-agent.hf.space/optimize
 
+## 🧪 API Testing (Swagger UI)
+
+After running the container, you can explore and test APIs using Swagger UI:
+
+### 🔹 Open API Docs
+
+```
+http://localhost:8000/docs
+```
+
+### 🔹 Available Endpoints
+
+* **GET /** → Home (status check)
+* **GET /health** → Health check
+* **GET /optimize** → Returns optimized EV charging schedule
+
+### 🔹 Example Response (/optimize)
+
+```json
+{
+  "input": "Sample EV charging scenario",
+  "output": "Optimized charging schedule (demo)",
+  "method": "Reinforcement Learning (planned)"
+}
+```
+
+👉 This demonstrates the working pipeline. Advanced RL optimization will be integrated in future stages.
 
 ### ✅ Expected Output
 
