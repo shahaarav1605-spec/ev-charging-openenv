@@ -1,0 +1,15 @@
+[project]
+name = "ev-charging-env"
+version = "0.1.0"
+description = "Smart EV charging station OpenEnv environment"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "openenv-core",
+]
+
+[project.scripts]
+server = "server.app:main"
+ev-charging-server = "ev_charging_env.server.app:app"

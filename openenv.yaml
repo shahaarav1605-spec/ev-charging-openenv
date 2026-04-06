@@ -1,0 +1,18 @@
+name: smart-ev-charging
+
+description: EV charging optimization environment
+
+entrypoint: server:main
+
+tasks:
+  easy:
+    description: basic scenario
+    difficulty: easy
+
+  medium:
+    description: medium demand
+    difficulty: medium
+
+  hard:
+    description: high demand
+    difficulty: hard

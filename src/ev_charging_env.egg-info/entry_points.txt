@@ -1,0 +1,3 @@
+[console_scripts]
+ev-charging-server = ev_charging_env.server.app:app
+server = server.app:main

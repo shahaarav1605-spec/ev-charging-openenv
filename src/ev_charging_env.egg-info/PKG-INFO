@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: ev-charging-env
+Version: 0.1.0
+Summary: Smart EV charging station OpenEnv environment
+Requires-Python: >=3.10
+Requires-Dist: fastapi
+Requires-Dist: uvicorn[standard]
+Requires-Dist: pydantic
+Requires-Dist: openenv-core
