@@ -1,3 +1,13 @@
+---
+title: EV Charging Optimization Agent
+emoji: ⚡
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # ⚡ EV Charging Optimization Agent
 
 AI-powered EV Charging Optimization Agent using Reinforcement Learning.
@@ -149,6 +159,10 @@ http://localhost:8000/docs
   "hard": 0.25
 }
 ```
+## 🚀 Live Demo
+
+- 🔗 Main App: https://aarav-2273-ev-charging-agent.hf.space/
+- ⚡ Optimize API: https://aarav-2273-ev-charging-agent.hf.space/optimize
 
 ### 📸 Output Screenshot
 

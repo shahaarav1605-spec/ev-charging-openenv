@@ -1,11 +1,22 @@
-import uvicorn
-from ev_charging_env.server.app import app
+from fastapi import FastAPI
 
+app = FastAPI(title="EV Charging Optimization Agent")
 
-def main():
-    # This is the entry point OpenEnv expects.
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+@app.get("/")
+def home():
+    return {
+        "message": "⚡ EV Charging Optimization Agent is Live!",
+        "status": "running"
+    }
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
-if __name__ == "__main__":
-    main()
+@app.get("/optimize")
+def optimize():
+    return {
+        "input": "Sample EV charging scenario",
+        "output": "Optimized charging schedule (demo)",
+        "method": "Reinforcement Learning (planned)"
+    }
