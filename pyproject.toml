@@ -3,7 +3,14 @@ name = "ev-charging-openenv"
 version = "0.1.0"
 description = "EV Charging Optimization Agent"
 authors = [{ name = "Aarav Shah" }]
-dependencies = []
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "openenv>=0.1.13"
+]
+
+[project.scripts]
+server = "server.app:main"
 
 [tool.openenv]
 entrypoint = "server.app:app"
