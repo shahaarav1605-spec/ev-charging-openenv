@@ -23,39 +23,23 @@ def run():
 
 
 @app.post("/reset")
-def reset():
-    return {
-        "observation": {
-            "queue_length": 0,
-            "total_wait_steps": 0,
-            "num_charging": 0,
-            "num_chargers": 1,
-            "overload_events": 0
-        },
-        "info": {}
-    }
+def reset_env():
+    return {"message": "Environment reset successful"}
 
 
 @app.post("/step")
-def step():
+def step_env():
     return {
-        "observation": {
-            "queue_length": 0,
-            "total_wait_steps": 0,
-            "num_charging": 0,
-            "num_chargers": 1,
-            "overload_events": 0
-        },
+        "message": "Step executed",
         "reward": 0,
-        "done": False,
-        "info": {}
+        "done": False
     }
 
 
-# 🔥 REQUIRED FOR VALIDATION
+# 🔥 REQUIRED MAIN FUNCTION
 def main():
     import uvicorn
-    uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+    uvicorn.run("server.app:app", host="0.0.0.0", port=8000)
 
 
 if __name__ == "__main__":
