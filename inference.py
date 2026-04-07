@@ -1,5 +1,5 @@
 """
-FINAL STABLE VERSION - EV Charging Agent
+FINAL VERSION - EV Charging Agent
 """
 
 import os
@@ -14,13 +14,13 @@ from ev_charging_env.tasks import TASKS
 from ev_charging_env.models import StationAction
 
 
-# 🌍 ENV VARIABLES (MUST USE THESE)
+# 🌍 ENV VARIABLES (IMPORTANT)
 API_BASE_URL = os.environ.get("API_BASE_URL")
 API_KEY = os.environ.get("API_KEY")
 MODEL_NAME = os.environ.get("MODEL_NAME", "gpt-4o-mini")
 
 
-# ✅ SAFE CLIENT INITIALIZATION (NO CRASH)
+# ✅ SAFE CLIENT (NO CRASH)
 client = None
 if API_BASE_URL and API_KEY:
     client = OpenAI(
@@ -29,15 +29,15 @@ if API_BASE_URL and API_KEY:
     )
 
 
-# 🎯 ACTION SPACE
+# ✅ CORRECT ACTION SPACE (FIXED BUG)
 def get_all_actions():
     return [
-        StationAction(0, 0),
-        StationAction(0, 1),
-        StationAction(1, 0),
-        StationAction(1, 1),
-        StationAction(2, 0),
-        StationAction(2, 1),
+        StationAction(price_level=0, power_mode=0),
+        StationAction(price_level=0, power_mode=1),
+        StationAction(price_level=1, power_mode=0),
+        StationAction(price_level=1, power_mode=1),
+        StationAction(price_level=2, power_mode=0),
+        StationAction(price_level=2, power_mode=1),
     ]
 
 
@@ -48,7 +48,7 @@ def simulate(env, action):
     return rew.value
 
 
-# 🤖 FORCE API CALL (IMPORTANT FOR PHASE 2)
+# 🤖 FORCE API CALL (PHASE 2 REQUIREMENT)
 def force_api_call(obs):
     if not client:
         return
@@ -74,7 +74,7 @@ def run_task(task_id: str) -> float:
     task_cfg: Dict = TASKS[task_id]
     env = EVChargingEnvironment(task_name=task_cfg["task_name"])
 
-    # ✅ REQUIRED
+    # ✅ REQUIRED START LOG
     print(f"[START] task={task_id}", flush=True)
 
     obs, rew = env.reset()
@@ -88,7 +88,7 @@ def run_task(task_id: str) -> float:
     while not rew.done:
         step_count += 1
 
-        # 🔥 REQUIRED API CALL EVERY STEP
+        # 🔥 REQUIRED API CALL
         force_api_call(obs)
 
         best_action = None
@@ -103,7 +103,6 @@ def run_task(task_id: str) -> float:
             for i, action in enumerate(actions):
                 score = simulate(env, action)
 
-                # 📊 Features
                 queue = obs.queue_length
                 wait = obs.total_wait_steps
                 charging = obs.num_charging
@@ -112,7 +111,7 @@ def run_task(task_id: str) -> float:
 
                 utilization = charging / chargers if chargers > 0 else 0
 
-                # 🎯 Heuristic
+                # 🎯 HEURISTIC
                 score += utilization * 8
                 score += charging * 0.5
                 score -= queue * 0.3
@@ -134,10 +133,10 @@ def run_task(task_id: str) -> float:
         obs, rew = env.step(best_action)
         rewards.append(rew.value)
 
-        # ✅ REQUIRED STRUCTURED LOG
+        # ✅ REQUIRED STEP LOG
         print(f"[STEP] step={step_count} reward={float(rew.value)}", flush=True)
 
-        # 🧠 Update scores
+        # 🧠 LEARNING
         action_scores[best_idx] += rew.value
 
         for i in range(len(action_scores)):
