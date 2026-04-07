@@ -1,8 +1,5 @@
 """
 Baseline inference script for EVChargingEnvironment.
-
-- Reads API_BASE_URL, MODEL_NAME, HF_TOKEN from env (as required)
-- Uses RL-style dynamic decision making
 """
 
 import os
@@ -15,13 +12,13 @@ from ev_charging_env.tasks import TASKS
 from ev_charging_env.models import StationAction
 
 
-# 🌍 Required environment variables
+# 🌍 ENV VARIABLES
 API_BASE_URL = os.getenv("API_BASE_URL", "http://host.docker.internal:8000")
 MODEL_NAME = os.getenv("MODEL_NAME", "ev-agent")
 HF_TOKEN = os.getenv("HF_TOKEN", None)
 
 
-# ✅ All possible actions
+# ✅ ALL POSSIBLE ACTIONS
 def get_all_actions():
     return [
         StationAction(price_level=0, power_mode=0),
@@ -33,24 +30,25 @@ def get_all_actions():
     ]
 
 
-# ✅ Simulate 1-step reward
+# 🎯 SIMULATION FUNCTION
 def simulate(env, action):
     sim_env = copy.deepcopy(env)
     _, rew = sim_env.step(action)
     return rew.value
 
 
-# 🔥 MAIN RL LOGIC + REQUIRED LOGGING
+# 🚀 MAIN RL LOGIC
 def run_task(task_id: str) -> float:
     task_cfg: Dict = TASKS[task_id]
     env = EVChargingEnvironment(task_name=task_cfg["task_name"])
 
+    # 🔹 START BLOCK
+    print(f"[START] task={task_id}", flush=True)
+
     obs, rew = env.reset()
+
     rewards = []
     step_count = 0
-
-    # ✅ REQUIRED
-    print(f"[START] task={task_id}", flush=True)
 
     actions = get_all_actions()
     action_scores = [0.0] * len(actions)
@@ -62,7 +60,7 @@ def run_task(task_id: str) -> float:
         best_score = -1e9
         best_idx = 0
 
-        # Exploration (10%)
+        # 🎲 Exploration
         if random.random() < 0.1:
             best_action = random.choice(actions)
             best_idx = actions.index(best_action)
@@ -70,7 +68,7 @@ def run_task(task_id: str) -> float:
             for i, action in enumerate(actions):
                 score = simulate(env, action)
 
-                # Features
+                # 📊 Features
                 queue = obs.queue_length
                 wait = obs.total_wait_steps
                 charging = obs.num_charging
@@ -79,7 +77,7 @@ def run_task(task_id: str) -> float:
 
                 utilization = charging / chargers if chargers > 0 else 0
 
-                # 🎯 Scoring logic
+                # 🔥 SCORING
                 score += utilization * 8
                 score += charging * 0.5
                 score -= queue * 0.3
@@ -98,38 +96,40 @@ def run_task(task_id: str) -> float:
                     best_action = action
                     best_idx = i
 
+        # ✅ Apply action
         obs, rew = env.step(best_action)
         rewards.append(rew.value)
 
-        # ✅ REQUIRED
+        # 📌 STEP BLOCK (IMPORTANT)
         print(f"[STEP] step={step_count} reward={rew.value}", flush=True)
 
-        # Learning update
+        # 🧠 Learning update
         action_scores[best_idx] += rew.value
 
-        # Decay others
         for i in range(len(action_scores)):
             if i != best_idx:
                 action_scores[i] *= 0.95
 
-    # Final score
+    # 📊 FINAL SCORE
     mean_reward = float(sum(rewards) / len(rewards)) if rewards else 0.0
     normalized = (mean_reward + 1.5) / 1.5
 
-    # ✅ REQUIRED
-    print(f"[END] task={task_id} score={normalized} steps={step_count}", flush=True)
+    # 🔚 END BLOCK
+    print(
+        f"[END] task={task_id} score={normalized:.4f} steps={step_count}",
+        flush=True,
+    )
 
     return normalized
 
 
-# 🚀 MAIN ENTRY
+# 🧠 MAIN ENTRY
 def main():
     print(f"API_BASE_URL={API_BASE_URL}")
     print(f"MODEL_NAME={MODEL_NAME}")
     print(f"HF_TOKEN set={bool(HF_TOKEN)}")
 
-    # ✅ IMPORTANT ORDER
-    for task_id in ["easy", "medium", "hard"]:
+    for task_id in TASKS.keys():
         run_task(task_id)
 
 
