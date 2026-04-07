@@ -2,7 +2,7 @@
 Baseline inference script for EVChargingEnvironment.
 
 - Reads API_BASE_URL, MODEL_NAME, HF_TOKEN from env (as required)
-- Uses a smarter dynamic policy (RL-style decision making)
+- Uses RL-style dynamic decision making
 """
 
 import os
@@ -15,7 +15,7 @@ from ev_charging_env.tasks import TASKS
 from ev_charging_env.models import StationAction
 
 
-# 🌍 Required environment variables (IMPORTANT for submission)
+# 🌍 Required environment variables
 API_BASE_URL = os.getenv("API_BASE_URL", "http://host.docker.internal:8000")
 MODEL_NAME = os.getenv("MODEL_NAME", "ev-agent")
 HF_TOKEN = os.getenv("HF_TOKEN", None)
@@ -40,35 +40,37 @@ def simulate(env, action):
     return rew.value
 
 
-# 🔥 Core RL-style logic
+# 🔥 MAIN RL LOGIC + REQUIRED LOGGING
 def run_task(task_id: str) -> float:
     task_cfg: Dict = TASKS[task_id]
     env = EVChargingEnvironment(task_name=task_cfg["task_name"])
 
     obs, rew = env.reset()
     rewards = []
+    step_count = 0
+
+    # ✅ REQUIRED
+    print(f"[START] task={task_id}", flush=True)
 
     actions = get_all_actions()
-
-    # 🧠 Learning memory
     action_scores = [0.0] * len(actions)
 
     while not rew.done:
+        step_count += 1
 
         best_action = None
         best_score = -1e9
         best_idx = 0
 
-        # 🎲 Exploration (10%)
+        # Exploration (10%)
         if random.random() < 0.1:
             best_action = random.choice(actions)
+            best_idx = actions.index(best_action)
         else:
-            # 🔍 Evaluate all actions
             for i, action in enumerate(actions):
-
                 score = simulate(env, action)
 
-                # 📊 Extract features
+                # Features
                 queue = obs.queue_length
                 wait = obs.total_wait_steps
                 charging = obs.num_charging
@@ -77,29 +79,18 @@ def run_task(task_id: str) -> float:
 
                 utilization = charging / chargers if chargers > 0 else 0
 
-                # 🔥 FINAL OPTIMIZED SCORING
-
-                # Reward good utilization
+                # 🎯 Scoring logic
                 score += utilization * 8
-
-                # Reward serving cars
                 score += charging * 0.5
-
-                # Penalize queue
                 score -= queue * 0.3
-
-                # Penalize waiting
                 score -= wait * 0.002
 
-                # 🎯 Target utilization zone (MOST IMPORTANT)
                 target = 0.65
                 score -= abs(utilization - target) * 5
 
-                # 🚨 Strong penalty for overload
                 if overload > 0:
                     score -= 50
 
-                # 🧠 Add learning memory
                 score += action_scores[i] * 0.1
 
                 if score > best_score:
@@ -107,26 +98,26 @@ def run_task(task_id: str) -> float:
                     best_action = action
                     best_idx = i
 
-        # ✅ Apply best action
         obs, rew = env.step(best_action)
         rewards.append(rew.value)
 
-        # 🧠 Learn from reward
+        # ✅ REQUIRED
+        print(f"[STEP] step={step_count} reward={rew.value}", flush=True)
+
+        # Learning update
         action_scores[best_idx] += rew.value
 
-        # 🔄 Decay others
+        # Decay others
         for i in range(len(action_scores)):
             if i != best_idx:
                 action_scores[i] *= 0.95
 
-    # ✅ REAL score (no fake boost)
+    # Final score
     mean_reward = float(sum(rewards) / len(rewards)) if rewards else 0.0
-
-    # 🔄 NORMALIZATION
     normalized = (mean_reward + 1.5) / 1.5
 
-    # 🖨️ Print both (IMPORTANT for judges)
-    print(f"Task {task_id}: normalized = {normalized:.4f} (real = {mean_reward:.4f})")
+    # ✅ REQUIRED
+    print(f"[END] task={task_id} score={normalized} steps={step_count}", flush=True)
 
     return normalized
 
@@ -137,7 +128,8 @@ def main():
     print(f"MODEL_NAME={MODEL_NAME}")
     print(f"HF_TOKEN set={bool(HF_TOKEN)}")
 
-    for task_id in TASKS.keys():
+    # ✅ IMPORTANT ORDER
+    for task_id in ["easy", "medium", "hard"]:
         run_task(task_id)
 
 
