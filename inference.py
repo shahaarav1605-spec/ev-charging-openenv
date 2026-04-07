@@ -19,7 +19,7 @@ API_BASE_URL = os.getenv("API_BASE_URL")
 API_KEY = os.getenv("API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME", "ev-agent")
 
-# 🔥 SAFE CLIENT (IMPORTANT FIX)
+# 🔥 SAFE CLIENT
 client = None
 if API_BASE_URL and API_KEY:
     client = OpenAI(
@@ -28,7 +28,7 @@ if API_BASE_URL and API_KEY:
     )
 
 
-# ✅ ACTION SPACE
+# 🎯 ACTION SPACE
 def get_all_actions():
     return [
         StationAction(price_level=0, power_mode=0),
@@ -40,11 +40,42 @@ def get_all_actions():
     ]
 
 
-# 🎯 SIMULATION
+# 🧪 SIMULATION
 def simulate(env, action):
     sim_env = copy.deepcopy(env)
     _, rew = sim_env.step(action)
     return rew.value
+
+
+# 🤖 OPTIONAL LLM GUIDANCE (VERY IMPORTANT)
+def get_llm_hint(obs):
+    if not client:
+        return None
+
+    try:
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": "You optimize EV charging stations."},
+                {
+                    "role": "user",
+                    "content": f"""
+Queue: {obs.queue_length}
+Charging: {obs.num_charging}
+Wait: {obs.total_wait_steps}
+
+Suggest: increase price / decrease price / increase power / decrease power
+"""
+                },
+            ],
+            max_tokens=10,
+        )
+
+        return response.choices[0].message.content.strip().lower()
+
+    except Exception as e:
+        print(f"LLM error: {e}", flush=True)
+        return None
 
 
 # 🚀 MAIN TASK
@@ -65,22 +96,8 @@ def run_task(task_id: str) -> float:
     while not rew.done:
         step_count += 1
 
-        # 🔥 SAFE LLM CALL (NO CRASH)
-        if client:
-            try:
-                client.chat.completions.create(
-                    model=MODEL_NAME,
-                    messages=[
-                        {"role": "system", "content": "You optimize EV charging stations."},
-                        {
-                            "role": "user",
-                            "content": f"Queue={obs.queue_length}, Charging={obs.num_charging}",
-                        },
-                    ],
-                    max_tokens=5,
-                )
-            except Exception as e:
-                print(f"LLM error: {e}", flush=True)
+        # 🧠 GET LLM HINT
+        hint = get_llm_hint(obs)
 
         best_action = None
         best_score = -1e9
@@ -103,7 +120,7 @@ def run_task(task_id: str) -> float:
 
                 utilization = charging / chargers if chargers > 0 else 0
 
-                # 🔥 SCORING
+                # 🎯 HEURISTICS
                 score += utilization * 8
                 score += charging * 0.5
                 score -= queue * 0.3
@@ -116,6 +133,17 @@ def run_task(task_id: str) -> float:
                     score -= 50
 
                 score += action_scores[i] * 0.1
+
+                # 🔥 APPLY LLM HINT
+                if hint:
+                    if "increase price" in hint and action.price_level > 0:
+                        score += 2
+                    if "decrease price" in hint and action.price_level < 2:
+                        score += 2
+                    if "increase power" in hint and action.power_mode == 1:
+                        score += 2
+                    if "decrease power" in hint and action.power_mode == 0:
+                        score += 2
 
                 if score > best_score:
                     best_score = score
