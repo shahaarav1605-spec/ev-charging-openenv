@@ -1,10 +1,18 @@
-env_id: "smart-ev-logistics-v1"
-version: "1.0.0"
-description: "High-utility EV charging agent with booking and wait-time optimization logic."
-observation_space: "EVObservation"
-action_space: "EVAction"
-max_steps: 50
+name: smart-ev-charging
+
+description: EV charging optimization environment
+
+entrypoint: server:main
+
 tasks:
-  - id: "city_charge_01"
-    difficulty: "medium"
-    description: "Navigate to a non-busy station and complete a charge before battery hits 0%."
+  easy:
+    description: basic scenario
+    difficulty: easy
+
+  medium:
+    description: medium demand
+    difficulty: medium
+
+  hard:
+    description: high demand
+    difficulty: hard
