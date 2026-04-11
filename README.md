@@ -1,3 +1,13 @@
+---
+title: EV Charging Optimization Agent
+emoji: ⚡
+colorFrom: blue
+colorTo: green
+sdk: gradio
+app_file: app.py
+pinned: false
+---
+
 # ⚡ EV Charging Optimization Agent
 
 > Intelligent decision-making system for optimizing EV charging efficiency using OpenEnv.
