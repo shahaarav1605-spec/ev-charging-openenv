@@ -1,6 +1,11 @@
 import random
 from openenv import Environment
-from models import EVAction, EVObservation, ActionType, StationInfo
+
+# Professional import handling to prevent "ModuleNotFoundError"
+try:
+    from models import EVAction, EVObservation, ActionType, StationInfo
+except ImportError:
+    from models import EVAction, EVObservation, ActionType, StationInfo
 
 class EVChargingEnv(Environment):
     def __init__(self):
@@ -21,7 +26,7 @@ class EVChargingEnv(Environment):
     def step(self, action: EVAction) -> tuple[EVObservation, float, bool, bool, dict]:
         reward = -0.1
         done = False
-        msg = "Processing action..."
+        msg = "Moving..."
 
         if action.action == ActionType.BOOK:
             if action.target_id in self.stations and not self.stations[action.target_id]["busy"]:
