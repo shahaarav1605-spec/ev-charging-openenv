@@ -11,7 +11,7 @@ Maximize EV charging throughput while minimizing congestion and overload.
 - Stabilized scoring across all difficulty levels
 """
 
-from ev_charging_env.server.environment import EVChargingEnvironment
+from src.ev_charging_env.server.environment import EVChargingEnvironment
 from ev_charging_env.tasks import TASKS
 from ev_charging_env.models import StationAction
 
