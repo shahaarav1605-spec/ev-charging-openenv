@@ -86,9 +86,9 @@ def run_task(task_id: str) -> float:
             # ============================
             score += utilization * 8
             score += charging * 0.5
-            score -= queue * 0.3
+            score -= queue * 0.5
             score -= wait * 0.002
-            score -= abs(utilization - 0.65) * 5
+            score -= abs(utilization - 0.75) * 8
 
             if overload > 0:
                 score -= 50
