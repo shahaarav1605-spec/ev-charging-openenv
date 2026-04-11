@@ -1,11 +1,7 @@
 import random
 from openenv import Environment
+from models import EVAction, EVObservation, ActionType, StationInfo
 
-# Professional import handling to prevent "ModuleNotFoundError"
-try:
-    from models import EVAction, EVObservation, ActionType, StationInfo
-except ImportError:
-    from models import EVAction, EVObservation, ActionType, StationInfo
 
 class EVChargingEnv(Environment):
     def __init__(self):

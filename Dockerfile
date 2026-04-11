@@ -2,17 +2,17 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copy everything
+# Copy all files from your VS Code folder
 COPY . .
 
 # Install dependencies
-RUN pip install --no-cache-dir openenv pydantic
+RUN pip install --no-cache-dir pydantic==2.6.1 openenv
 
-# CRITICAL: Tell Python to look in the /app folder for models.py
+# Set PYTHONPATH so Python can see your files
 ENV PYTHONPATH=/app
 
-# Use the Hugging Face port
+# Standard Port for Hugging Face
 EXPOSE 7860
 
-# Start the server
+# CMD [ "filename" : "ClassName" ]
 CMD ["python", "-m", "openenv.server", "env:EVChargingEnv", "--host", "0.0.0.0", "--port", "7860"]
