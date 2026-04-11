@@ -243,4 +243,4 @@ CSE (AI & ML)
 
 ### 📸 Output Screenshot
 
-![Output Screenshot](image.png)
+![Output Screenshot](image-1.png)
