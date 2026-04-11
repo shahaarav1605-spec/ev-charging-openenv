@@ -21,11 +21,10 @@ class StepRequest(BaseModel):
 # =========================================
 
 @app.post("/reset")
-@app.post("/env/reset")
-def reset(req: ResetRequest):
+def reset():
     return {
-        "observation": {"message": "environment reset"},
-        "reward": 0.0,
+        "observation": {},
+        "reward": 0,
         "done": False,
         "info": {}
     }
