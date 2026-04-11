@@ -100,4 +100,4 @@ with gr.Blocks() as demo:
 # =========================================================
 # Judges:
 # This launches the UI locally and on HuggingFace Spaces.
-demo.launch()
+demo.launch(server_name="0.0.0.0", server_port=7860)
