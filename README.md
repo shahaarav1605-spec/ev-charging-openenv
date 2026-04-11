@@ -1,213 +1,233 @@
----
-title: EV Charging Optimization Agent
-emoji: ⚡
-colorFrom: blue
-colorTo: green
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # ⚡ EV Charging Optimization Agent
 
-AI-powered EV Charging Optimization Agent using Reinforcement Learning.
+> Intelligent decision-making system for optimizing EV charging efficiency using OpenEnv.
 
-## 📌 Overview
+---
 
-The EV Charging Optimization Agent is an intelligent system designed to optimize electric vehicle (EV) charging strategies in real time.
+# ⚡ EV Charging Optimization Agent (OpenEnv Submission)
 
-It simulates multiple charging scenarios and dynamically selects the most efficient actions using a reward-based decision mechanism inspired by reinforcement learning.
+## 🚀 Overview
 
-The goal is to improve charging efficiency, reduce waiting time, and ensure balanced energy utilization.
+This project implements an intelligent **EV Charging Optimization Agent** built on the OpenEnv framework.
+
+The agent dynamically manages:
+
+* ⚡ Charging power allocation
+* 💰 Pricing strategy
+* 📊 System load balancing
+
+to **maximize efficiency, reduce congestion, and improve user experience** in EV charging stations.
 
 ---
 
 ## 🎯 Problem Statement
 
-With the increasing adoption of electric vehicles, current charging infrastructure faces several challenges:
+EV charging stations often face:
 
-- ⚠️ Long waiting queues at charging stations  
-- ⚠️ Uneven distribution of charging load  
-- ⚠️ Inefficient energy utilization  
-- ⚠️ Lack of adaptive decision-making systems  
+* Long waiting queues
+* Uneven charger utilization
+* Energy inefficiency during peak hours
+* Overload risks
 
-These issues lead to poor user experience and reduced system efficiency.
+Traditional systems use fixed rules, which fail under dynamic real-world conditions.
 
 ---
 
 ## 💡 Our Solution
 
-We developed an intelligent EV charging agent that:
+We designed an **adaptive AI agent** that:
 
-- Monitors charging conditions dynamically  
-- Selects optimal actions based on system state  
-- Uses a reward-based feedback mechanism  
-- Ensures consistent and efficient performance across scenarios  
-
-The system adapts its behavior based on different difficulty levels (easy, medium, hard), making it robust and scalable.
+* Evaluates multiple actions at every step
+* Selects the optimal pricing and power strategy
+* Responds to real-time demand changes
+* Maintains stable performance across all scenarios
 
 ---
 
-## 🚀 Key Features
+## 🧠 Key Features
 
-- ⚡ Adaptive charging optimization  
-- 🧠 Reward-driven decision system  
-- 🔄 Multi-scenario simulation (easy, medium, hard)  
-- 🚀 FastAPI-powered API interface  
-- 🐳 Dockerized for seamless deployment  
-- 📊 Stable and normalized performance output  
+### 🔹 Multi-Action Decision Engine
+
+Instead of a fixed rule, the agent:
+
+* Simulates all possible actions
+* Selects the best one using scoring logic
 
 ---
 
-## 🧠 How It Works
+### 🔹 Adaptive Demand Handling
 
-1. The environment simulates EV charging conditions  
-2. The agent observes the current system state  
-3. Based on predefined logic, it selects an optimal action  
-4. A reward is calculated based on efficiency and performance  
-5. The process repeats, improving overall system behavior  
+* Detects high queue / overload situations
+* Adjusts pricing and power dynamically
+* Prevents system congestion
 
-This creates a feedback loop similar to reinforcement learning, enabling adaptive optimization.
+---
+
+### 🔹 Explainable AI (XAI)
+
+Each decision includes reasoning:
+
+* `high_queue`
+* `low_utilization`
+* `overload_control`
+* `solar_window`
+
+➡️ Makes the model transparent and interpretable
+
+---
+
+### 🔹 Time-Aware Optimization
+
+* Encourages efficient energy use during optimal time windows
+* Aligns with real-world solar/grid efficiency patterns
+
+---
+
+### 🔹 Robust Across Difficulty Levels
+
+The agent performs consistently in:
+
+* Easy scenarios
+* Medium complexity environments
+* High-stress (hard) conditions
 
 ---
 
 ## 📊 Results
 
-The agent produces stable and optimized outputs across different scenarios:
+### Final Evaluation Output:
 
 ```json
 {
-  "easy": 0.60,
-  "medium": 0.36,
-  "hard": 0.25
+  "easy": 1.47,
+  "medium": 0.73,
+  "hard": 0.56
 }
+```
 
-## ⚙️ Tech Stack
+### 📌 Interpretation:
 
-- Python
-- FastAPI
-- Docker
-- HuggingFace Integration (optional)
-- Reinforcement-style logic (custom implementation)
+* High efficiency in simple environments
+* Strong adaptability in medium scenarios
+* Stable performance under heavy load (hard tasks)
 
 ---
 
 ## 🏗️ Project Structure
 
+```
 ev-charging-openenv/
 │
 ├── server/
-│ └── app.py # FastAPI server
+│   └── app.py                # FastAPI server
 │
 ├── src/
-│ └── ev_charging_env/
-│ ├── environment.py
-│ ├── models.py
-│ ├── simulation.py
-│ ├── tasks.py
+│   └── ev_charging_env/
+│       ├── environment.py   # Environment logic
+│       ├── models.py        # Action/State models
+│       ├── simulation.py    # Simulation engine
+│       ├── tasks.py         # Task definitions
 │
-├── inference.py # Main logic runner
-├── Dockerfile
-├── requirements.txt
-├── README.md
-
-
----
-
-## 🚀 How to Run
-
-### 🔹 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/ev-charging-openenv.git
-cd ev-charging-openenv
+├── inference.py             # 🚀 Main agent logic
+├── openenv.yaml             # OpenEnv config
+├── Dockerfile               # Container setup
+├── requirements.txt         # Dependencies
+├── README.md                # Documentation
 ```
 
 ---
 
-### 🔹 2. Build Docker Image
+## ⚙️ How It Works
 
-```bash
+1. Environment provides current state:
+
+   * Queue length
+   * Charger utilization
+   * Waiting time
+   * Overload
+
+2. Agent:
+
+   * Evaluates all action combinations
+   * Scores each action
+   * Selects the best one
+
+3. Environment updates:
+
+   * Returns reward
+   * Moves to next state
+
+4. Loop continues until completion
+
+---
+
+## ▶️ Running the Project
+
+### 1. Build Docker Image
+
+```
 docker build -t ev-agent .
 ```
 
----
+### 2. Run Container
 
-### 🔹 3. Run the Container
-
-```bash
-docker run -p 9000:7860 ev-agent
+```
+docker run -p 7860:7860 ev-agent
 ```
 
----
+### 3. Open API Docs
 
-### 🔹 4. Open in Browser
-
-```text
-http://localhost:9000
+```
+http://localhost:7860/docs
 ```
 
----
+### 4. Run Evaluation
 
-### 🔹 5. Test API Endpoint
-
-```text
-http://localhost:8000/optimize
-```
+* Use `/run` endpoint
+* View performance results
 
 ---
 
-## 📌 Notes
+## 📈 Why This Stands Out
 
-* The application runs internally on port **7860**
-* Port **8000 is mapped** for local access
-* No Hugging Face token is required for this project
+✅ Adaptive (not rule-based)
+✅ Handles real-world dynamic conditions
+✅ Explainable decisions
+✅ Stable across all difficulty levels
+✅ Clean and modular design
 
 ---
 
-## 🌐 Live Demo
+## 🔮 Future Improvements
 
-* 🔗 Main App: https://aarav-2273-ev-charging-agent.hf.space/
-* ⚡ Optimize API: https://aarav-2273-ev-charging-agent.hf.space/optimize
+* Reinforcement Learning integration
+* Real-world EV station deployment
+* Smart grid + renewable energy integration
+* Multi-station coordination
 
-## 🧪 API Testing (Swagger UI)
+---
 
-After running the container, you can explore and test APIs using Swagger UI:
+## 🏁 Conclusion
 
-### 🔹 Open API Docs
+This project demonstrates how intelligent decision-making can significantly improve EV charging infrastructure efficiency.
 
-```
-http://localhost:8000/docs
-```
+By combining:
 
-### 🔹 Available Endpoints
+* Adaptive heuristics
+* Multi-action evaluation
+* Explainability
 
-* **GET /** → Home (status check)
-* **GET /health** → Health check
-* **GET /optimize** → Returns optimized EV charging schedule
+we create a **robust and scalable optimization system** ready for real-world applications.
 
-### 🔹 Example Response (/optimize)
+---
 
-```json
-{
-  "input": "Sample EV charging scenario",
-  "output": "Optimized charging schedule (demo)",
-  "method": "Reinforcement Learning (planned)"
-}
-```
+## 👨‍💻 Team
 
-👉 This demonstrates the working pipeline. Advanced RL optimization will be integrated in future stages.
+**AI AIchemists**
+CSE (AI & ML)
 
-### ✅ Expected Output
-
-```json
-{
-  "easy": 0.60,
-  "medium": 0.36,
-  "hard": 0.25
-}
-```
+---
 
 ### 📸 Output Screenshot
 
-![Output Screenshot](image-6.png)
+![Output Screenshot](image.png)
