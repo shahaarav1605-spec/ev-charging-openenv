@@ -16,6 +16,9 @@ pinned: false
 
 # ⚡ EV Charging Optimization Agent (OpenEnv Submission)
 
+### 💡 Innovation
+- Combines pricing + power + solar optimization in one unified RL-style environment.
+
 ## 🚀 Overview
 
 This project implements an intelligent **EV Charging Optimization Agent** built on the OpenEnv framework.
