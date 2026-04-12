@@ -1,74 +1,37 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from inference import main
+from typing import List
+from main import optimize_charging
 
 app = FastAPI()
 
+# -----------------------------
+# Request Model
+# -----------------------------
+class ChargingRequest(BaseModel):
+    battery_level: float        # current battery %
+    target_level: float         # target battery %
+    hours_available: int        # time available
+    price_per_hour: List[float] # electricity price per hour
+    solar_available: List[float]  # solar energy contribution (0-1)
 
-# =========================================
-# judges.comments: Request schemas
-# =========================================
-class ResetRequest(BaseModel):
-    seed: int = 0
-
-
-class StepRequest(BaseModel):
-    action: dict = {}
-
-
-# =========================================
-# ✅ SUPPORT BOTH PATHS (CRITICAL FIX)
-# =========================================
-
-@app.post("/reset")
-def reset():
-    return {
-        "observation": {},
-        "reward": 0,
-        "done": False,
-        "info": {}
-    }
-
-
-@app.post("/step")
-@app.post("/env/step")
-def step(req: StepRequest):
-    return {
-        "observation": {"message": "step executed"},
-        "reward": 1.0,
-        "done": False,
-        "info": {}
-    }
-
-
-# =========================================
-# judges.comments: main evaluation
-# =========================================
-@app.get("/run")
-def run():
-    return main()
-
-
-# =========================================
-# health check
-# =========================================
+# -----------------------------
+# Root Endpoint
+# -----------------------------
 @app.get("/")
 def root():
-    return {"status": "running"}
+    return {"message": "EV Charging Optimization Agent Running 🚀"}
 
-# =========================================
-# judges.comments: CRITICAL FIX
-# =========================================
-@app.post("/")
-def root_post():
-    """
-    judges.comments:
-    OpenEnv sometimes sends POST to root endpoint.
-    Must handle this to avoid Method Not Allowed.
-    """
-    return {
-        "observation": {"message": "root handled"},
-        "reward": 0.0,
-        "done": False,
-        "info": {}
-    }
+# -----------------------------
+# Optimization Endpoint
+# -----------------------------
+@app.post("/optimize")
+def optimize(request: ChargingRequest):
+    result = optimize_charging(
+        battery_level=request.battery_level,
+        target_level=request.target_level,
+        hours=request.hours_available,
+        prices=request.price_per_hour,
+        solar=request.solar_available
+    )
+    return result

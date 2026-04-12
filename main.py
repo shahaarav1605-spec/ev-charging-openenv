@@ -1,64 +1,99 @@
-# ============================================================
-# judges.comments: ROOT ENTRYPOINT FIX FOR OPENENV (CRITICAL)
-# ============================================================
+def optimize_charging(battery_level, target_level, hours, prices, solar):
+    """
+    EV Charging Optimization Logic
 
-from fastapi import FastAPI, Request
-from inference import run_inference
+    Parameters:
+    - battery_level: current battery percentage (0–100)
+    - target_level: desired battery percentage (0–100)
+    - hours: total hours available for charging
+    - prices: list of electricity prices per hour
+    - solar: list of solar availability (0 to 1)
 
-app = FastAPI()
+    Returns:
+    - optimized charging plan
+    """
 
-app = FastAPI()
+    # -----------------------------
+    # Input Validation
+    # -----------------------------
+    if hours <= 0:
+        return {"error": "Hours must be greater than 0"}
 
-# judges.comments: Health check
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+    if len(prices) != hours or len(solar) != hours:
+        return {
+            "error": "Length of price_per_hour and solar_available must match hours_available"
+        }
 
-# judges.comments: GET root (optional)
-@app.get("/")
-def root_get():
-    return {"message": "EV Charging Agent Running"}
+    if battery_level >= target_level:
+        return {
+            "message": "Battery already sufficient",
+            "final_battery": battery_level,
+            "total_cost": 0,
+            "charging_plan": []
+        }
 
-# 🚨 CRITICAL FIX: POST ROOT (THIS WAS MISSING)
-@app.post("/")
-def root_post():
+    # -----------------------------
+    # Initialization
+    # -----------------------------
+    charging_plan = []
+    current_battery = battery_level
+    battery_needed = target_level - battery_level
+
+    # Assume equal distribution of charge
+    charge_per_hour = battery_needed / hours
+    total_cost = 0
+
+    # -----------------------------
+    # Scoring Logic
+    # Lower score = better hour
+    # -----------------------------
+    hour_scores = []
+
+    for i in range(hours):
+        # Solar reduces effective cost impact
+        score = prices[i] - (solar[i] * 5)
+        hour_scores.append((i, score))
+
+    # Sort hours by best score
+    hour_scores.sort(key=lambda x: x[1])
+
+    # Select best hours
+    selected_hours = [h[0] for h in hour_scores]
+
+    # -----------------------------
+    # Charging Simulation
+    # -----------------------------
+    for h in selected_hours:
+        if current_battery >= target_level:
+            break
+
+        energy_added = charge_per_hour
+
+        # Effective price reduced by solar
+        effective_price = prices[h] * (1 - solar[h])
+
+        cost = energy_added * effective_price
+        total_cost += cost
+
+        current_battery += energy_added
+
+        charging_plan.append({
+            "hour": int(h),
+            "energy_added": round(energy_added, 2),
+            "cost": round(cost, 2),
+            "price": prices[h],
+            "solar_used": solar[h],
+            "effective_price": round(effective_price, 2)
+        })
+
+    # -----------------------------
+    # Final Output
+    # -----------------------------
     return {
-        "observation": {"msg": "root"},
-        "reward": 0.0,
-        "done": False,
-        "info": {}
+        "initial_battery": round(battery_level, 2),
+        "target_battery": round(target_level, 2),
+        "final_battery": round(min(current_battery, target_level), 2),
+        "total_cost": round(total_cost, 2),
+        "hours_used": len(charging_plan),
+        "charging_plan": charging_plan
     }
-
-# judges.comments: OpenEnv RESET
-@app.post("/reset")
-async def reset(request: Request):
-    data = await request.json()
-
-    return {
-        "observation": {},
-        "reward": 0.0,
-        "terminated": False,
-        "truncated": False,
-        "info": {}
-    }
-
-# judges.comments: OpenEnv STEP
-from fastapi import Request
-
-# judges.comments: OpenEnv STEP
-@app.post("/step")
-async def step(request: Request):
-    data = await request.json()
-
-    return {
-        "observation": {},
-        "reward": 0.1,
-        "terminated": False,
-        "truncated": False,
-        "info": {}
-    }
-
-# judges.comments: Run evaluation
-@app.get("/run")
-def run():
-    return run_inference()
