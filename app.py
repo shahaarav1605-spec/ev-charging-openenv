@@ -1,40 +1,37 @@
-# ============================================================
-# 🚀 EV Charging Optimization Agent - Hugging Face Demo
-# judges.comments: Gradio UI for evaluation
-# ============================================================
+# judges.comments: Hugging Face demo interface
 
 import gradio as gr
-from inference import main
+from inference import run_inference
+
 
 def run_simulation():
-    try:
-        results = main()
-        return results
-    except Exception as e:
-        return {"error": str(e)}
+    results = run_inference()
 
-def explain():
-    return """The agent:
-- Evaluates multiple actions at each step
-- Selects optimal pricing and power strategy
-- Balances utilization and queue
-- Uses time-based optimization (solar window)
-- Applies overload penalties for stability
-"""
+    explanation = """
+    🚀 EV Charging Optimization Agent
+
+    Strategy:
+    - Dynamic pricing + power allocation
+    - Queue-aware optimization
+    - Load balancing under high demand
+    - Time-based (solar window) optimization
+
+    Goal:
+    Maximize throughput while minimizing wait time & overload
+    """
+
+    return results, explanation
+
 
 with gr.Blocks() as demo:
     gr.Markdown("# ⚡ EV Charging Optimization Agent")
-    gr.Markdown("Interactive demo for evaluating the agent.")
+    gr.Markdown("AI-based decision system for smart EV charging.")
 
-    run_btn = gr.Button("🚀 Run Simulation")
+    btn = gr.Button("🚀 Run Simulation")
+
     output = gr.JSON(label="📊 Results")
+    explain = gr.Textbox(label="🧠 Explanation")
 
-    run_btn.click(fn=run_simulation, outputs=output)
-
-    gr.Markdown("## 🧠 Explainability")
-    explain_btn = gr.Button("Show How It Works")
-    explain_output = gr.Textbox()
-
-    explain_btn.click(fn=explain, outputs=explain_output)
+    btn.click(fn=run_simulation, outputs=[output, explain])
 
 demo.launch()
