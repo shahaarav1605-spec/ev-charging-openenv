@@ -72,7 +72,6 @@ Instead of using fixed rules, this system:
 ev-charging-openenv/
 │
 ├── app.py              # Gradio UI (Hugging Face)
-├── main.py             # FastAPI backend (OpenEnv)
 ├── inference.py        # Core AI logic
 ├── Dockerfile          # Container setup
 ├── requirements.txt    # Dependencies
