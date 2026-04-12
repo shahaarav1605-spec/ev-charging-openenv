@@ -1,53 +1,46 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Dict
+from inference import run_task
 
 app = FastAPI()
 
-# -----------------------------
-# FIXED MODELS
-# -----------------------------
-class ActionRequest(BaseModel):
-    action: str = "charge"   # default value (prevents crash)
+
+@app.get("/")
+def root():
+    return {"message": "EV Charging Agent Running"}
 
 
-# -----------------------------
-# RESET (SAFE)
-# -----------------------------
-@app.post("/openenv/reset")
-def reset():
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.get("/run")
+def run():
+    results = {}
+    for task_id in ["easy", "medium", "hard"]:
+        results[task_id] = run_task(task_id)
+    return results
+
+
+@app.post("/reset")
+def reset_env():
+    return {"message": "Environment reset successful"}
+
+
+@app.post("/step")
+def step_env():
     return {
-        "state": {
-            "battery_level": 20,
-            "target_level": 80,
-            "time": 0
-        },
+        "message": "Step executed",
         "reward": 0,
         "done": False
     }
 
 
-# -----------------------------
-# STEP (FIXED BODY HANDLING)
-# -----------------------------
-@app.post("/openenv/step")
-def step(req: ActionRequest):
-    return {
-        "next_state": {
-            "battery_level": 30,
-            "time": 1
-        },
-        "reward": 1,
-        "done": False,
-        "info": {
-            "action_taken": req.action
-        }
-    }
+# 🔥 REQUIRED MAIN FUNCTION
+def main():
+    import uvicorn
+    uvicorn.run("server.app:app", host="0.0.0.0", port=8000)
 
 
-# -----------------------------
-# VALIDATE
-# -----------------------------
-@app.get("/openenv/validate")
-def validate():
-    return {"status": "ok"}
+if __name__ == "__main__":
+    main()

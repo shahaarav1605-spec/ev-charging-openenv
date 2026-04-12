@@ -1,82 +1,18 @@
-# ================================
-# OpenEnv Manifest for EV Charging
-# ================================
+name: smart-ev-charging
 
-name: ev_charging_env
-version: 1.0.0
+description: EV charging optimization environment
 
-description: >
-  Intelligent EV Charging Station Optimization Environment.
-  The agent dynamically controls pricing and power distribution
-  to maximize efficiency, reduce wait time, and prevent overload.
+entrypoint: server:main
 
-# Entry point (VERY IMPORTANT)
-entry_point: ev_charging_env.server.app:app
-
-# Runtime
-runtime:
-  type: python
-  python_version: "3.10"
-
-# API configuration
-api:
-  type: fastapi
-  port: 8000
-
-# Observation Schema (what agent sees)
-observation_space:
-  type: object
-  properties:
-    queue_length:
-      type: integer
-      description: Number of vehicles waiting
-    num_charging:
-      type: integer
-      description: Vehicles currently charging
-    num_chargers:
-      type: integer
-    total_wait_steps:
-      type: integer
-    overload_events:
-      type: integer
-
-# Action Schema (what agent does)
-action_space:
-  type: object
-  properties:
-    price_level:
-      type: integer
-      enum: [0, 1, 2]
-      description: Low, Medium, High pricing
-    power_mode:
-      type: integer
-      enum: [0, 1]
-      description: Normal or Fast charging mode
-
-# Reward definition
-reward:
-  type: float
-  description: >
-    Reward balances efficiency, utilization, and penalties.
-    Penalizes overload, long queues, and wait times.
-
-# Tasks (VERY IMPORTANT FOR JUDGES)
 tasks:
-  - id: easy
-    description: Low traffic scenario
-  - id: medium
-    description: Moderate traffic scenario
-  - id: hard
-    description: High load + stress scenario
+  easy:
+    description: basic scenario
+    difficulty: easy
 
-# Metadata (makes it look polished like reference repos)
-metadata:
-  author: Aarav Shah
-  category: reinforcement-learning
-  difficulty: medium
-  tags:
-    - EV
-    - optimization
-    - smart-energy
-    - scheduling
-    - sustainability
+  medium:
+    description: medium demand
+    difficulty: medium
+
+  hard:
+    description: high demand
+    difficulty: hard
