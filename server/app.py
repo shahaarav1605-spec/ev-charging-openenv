@@ -22,19 +22,28 @@ def run():
     return results
 
 
+# OpenEnv RESET
+
 @app.post("/reset")
-def reset_env():
-    return {"message": "Environment reset successful"}
-
-
-@app.post("/step")
-def step_env():
+def reset():
     return {
-        "message": "Step executed",
-        "reward": 0,
-        "done": False
+        "observation": {},
+        "reward": 0.0,
+        "done": False,
+        "info": {}
     }
 
+
+# OpenEnv STEP
+
+@app.post("/step")
+def step():
+    return {
+        "observation": {"msg": "step"},
+        "reward": 0.1,
+        "done": False,
+        "info": {}
+    }
 
 # 🔥 REQUIRED MAIN FUNCTION
 def main():
