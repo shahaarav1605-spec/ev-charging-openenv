@@ -14,7 +14,7 @@ Maximize EV charging throughput while minimizing congestion and overload.
 from src.ev_charging_env.server.environment import EVChargingEnvironment
 from ev_charging_env.tasks import TASKS
 from ev_charging_env.models import StationAction
-
+print("✅ NEW inference.py LOADED")
 
 def safe(obs, *names, default=0):
     """
