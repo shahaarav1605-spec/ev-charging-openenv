@@ -5,208 +5,205 @@ colorFrom: blue
 colorTo: purple
 sdk: gradio
 app_file: app.py
----
+----------------
 
 # ⚡ EV Charging Optimization Agent
 
-AI-powered EV Charging Optimization Agent using Reinforcement Learning.
-
-## 📌 Overview
-
-The EV Charging Optimization Agent is an intelligent system designed to optimize electric vehicle (EV) charging strategies in real time.
-
-It simulates multiple charging scenarios and dynamically selects the most efficient actions using a reward-based decision mechanism inspired by reinforcement learning.
-
-The goal is to improve charging efficiency, reduce waiting time, and ensure balanced energy utilization.
+🚀 An intelligent AI agent designed to optimize EV charging stations by balancing **throughput, congestion, and system stability** in real-time.
 
 ---
 
-## 🎯 Problem Statement
+## 🎯 Objective
 
-With the increasing adoption of electric vehicles, current charging infrastructure faces several challenges:
+Maximize EV charging throughput while minimizing:
 
-- ⚠️ Long waiting queues at charging stations  
-- ⚠️ Uneven distribution of charging load  
-- ⚠️ Inefficient energy utilization  
-- ⚠️ Lack of adaptive decision-making systems  
-
-These issues lead to poor user experience and reduced system efficiency.
+* 🚗 Waiting queues
+* ⚡ Power overload
+* ⏱️ Charging delays
 
 ---
 
-## 💡 Our Solution
+## 🧠 Core Idea
 
-We developed an intelligent EV charging agent that:
+Instead of using fixed rules, this system:
 
-- Monitors charging conditions dynamically  
-- Selects optimal actions based on system state  
-- Uses a reward-based feedback mechanism  
-- Ensures consistent and efficient performance across scenarios  
-
-The system adapts its behavior based on different difficulty levels (easy, medium, hard), making it robust and scalable.
+✔ Evaluates multiple actions at every step
+✔ Adapts to real-time conditions
+✔ Selects the best strategy dynamically
 
 ---
 
-## 🚀 Key Features
+## ⚙️ Key Features
 
-- ⚡ Adaptive charging optimization  
-- 🧠 Reward-driven decision system  
-- 🔄 Multi-scenario simulation (easy, medium, hard)  
-- 🚀 FastAPI-powered API interface  
-- 🐳 Dockerized for seamless deployment  
-- 📊 Stable and normalized performance output  
+### 🔹 Multi-Action Decision Engine
 
----
+* Simultaneously evaluates:
 
-## 🧠 How It Works
+  * Pricing strategies
+  * Power distribution
+* Selects optimal action per timestep
 
-1. The environment simulates EV charging conditions  
-2. The agent observes the current system state  
-3. Based on predefined logic, it selects an optimal action  
-4. A reward is calculated based on efficiency and performance  
-5. The process repeats, improving overall system behavior  
+### 🔹 Adaptive Load Handling
 
-This creates a feedback loop similar to reinforcement learning, enabling adaptive optimization.
+* Detects congestion (queue length)
+* Adjusts pricing & power dynamically
 
----
+### 🔹 Overload Control
 
-## 📊 Results
+* Penalizes unsafe power usage
+* Stabilizes grid performance
 
-The agent produces stable and optimized outputs across different scenarios:
+### 🔹 Time-Aware Optimization
 
-```json
-{
-  "easy": 0.60,
-  "medium": 0.36,
-  "hard": 0.25
-}
+* Uses time-of-day factor (solar window)
+* Encourages efficient energy usage
 
-## ⚙️ Tech Stack
+### 🔹 Explainable AI
 
-- Python
-- FastAPI
-- Docker
-- HuggingFace Integration (optional)
-- Reinforcement-style logic (custom implementation)
+* Provides reasoning behind decisions
+* Improves transparency and trust
 
 ---
 
 ## 🏗️ Project Structure
 
+```
 ev-charging-openenv/
 │
-├── server/
-│ └── app.py # FastAPI server
-│
-├── src/
-│ └── ev_charging_env/
-│ ├── environment.py
-│ ├── models.py
-│ ├── simulation.py
-│ ├── tasks.py
-│
-├── inference.py # Main logic runner
-├── Dockerfile
-├── requirements.txt
+├── app.py              # Gradio UI (Hugging Face)
+├── main.py             # FastAPI backend (OpenEnv)
+├── inference.py        # Core AI logic
+├── Dockerfile          # Container setup
+├── requirements.txt    # Dependencies
 ├── README.md
-
-
----
-
-## 🚀 How to Run
-
-### 🔹 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/ev-charging-openenv.git
-cd ev-charging-openenv
+│
+└── src/
+    └── ev_charging_env/
+        ├── environment.py
+        ├── tasks.py
+        ├── models.py
 ```
 
 ---
 
-### 🔹 2. Build Docker Image
+## 🚀 Demo (Hugging Face)
+
+👉 Run the simulation live:
+
+* Click **“🚀 Run Simulation”**
+* View:
+
+  * 📊 Performance scores (easy / medium / hard)
+  * 🧠 Decision explanation
+
+---
+
+## 📊 Sample Output
+
+```json
+{
+  "easy": 1.48,
+  "medium": 0.92,
+  "hard": 0.73
+}
+```
+
+---
+
+## 🔬 How It Works
+
+### Step-by-Step:
+
+1. Environment provides system state:
+
+   * Queue length
+   * Charger utilization
+   * Waiting time
+   * Overload level
+
+2. Agent evaluates multiple actions:
+
+   * Price levels (0–2)
+   * Power modes (0–1)
+
+3. Each action is scored based on:
+
+   * Utilization efficiency
+   * Queue reduction
+   * Overload control
+   * Time-based optimization
+
+4. Best action is selected and applied
+
+---
+
+## 📈 Why This Stands Out
+
+✔ Not rule-based — fully adaptive
+✔ Handles real-world dynamic scenarios
+✔ Balances efficiency + stability
+✔ Works across all difficulty levels
+
+---
+
+## 🧪 API Endpoints (OpenEnv)
+
+| Method | Endpoint  | Description       |
+| ------ | --------- | ----------------- |
+| GET    | `/health` | Health check      |
+| POST   | `/reset`  | Reset environment |
+| POST   | `/step`   | Perform action    |
+| GET    | `/run`    | Run evaluation    |
+
+---
+
+## 🐳 Run Locally (Docker)
 
 ```bash
 docker build -t ev-agent .
+docker run -p 7860:7860 ev-agent
+```
+
+Open:
+
+```
+http://localhost:7860/docs
 ```
 
 ---
 
-### 🔹 3. Run the Container
+## 🧩 Tech Stack
 
-```bash
-docker run -p 9000:7860 ev-agent
-```
-
----
-
-### 🔹 4. Open in Browser
-
-```text
-http://localhost:9000
-```
+* ⚡ FastAPI — Backend API
+* 🎛️ Gradio — Interactive UI
+* 🐳 Docker — Deployment
+* 🧠 Custom RL Logic — Decision engine
 
 ---
 
-### 🔹 5. Test API Endpoint
+## 🏁 Judges Notes
 
-```text
-http://localhost:8000/optimize
-```
-
----
-
-## 📌 Notes
-
-* The application runs internally on port **7860**
-* Port **8000 is mapped** for local access
-* No Hugging Face token is required for this project
+* ✔ Multi-action evaluation (not fixed policy)
+* ✔ Adaptive behavior under high demand
+* ✔ Explainable decisions for transparency
+* ✔ Stable scoring across difficulty levels
 
 ---
 
-## 🌐 Live Demo
+## 👨‍💻 Team
 
-* 🔗 Main App: https://aarav-2273-ev-charging-agent.hf.space/
-* ⚡ Optimize API: https://aarav-2273-ev-charging-agent.hf.space/optimize
+**AI AIchemists**
+AI/ML Developer | Hackathon Enthusiast
 
-## 🧪 API Testing (Swagger UI)
+---
 
-After running the container, you can explore and test APIs using Swagger UI:
+## ⭐ Final Thought
 
-### 🔹 Open API Docs
+> “Smart charging isn’t just about speed — it’s about balance.”
 
-```
-http://localhost:8000/docs
-```
+This agent ensures efficient, scalable, and intelligent EV charging for future smart cities 🚀
 
-### 🔹 Available Endpoints
-
-* **GET /** → Home (status check)
-* **GET /health** → Health check
-* **GET /optimize** → Returns optimized EV charging schedule
-
-### 🔹 Example Response (/optimize)
-
-```json
-{
-  "input": "Sample EV charging scenario",
-  "output": "Optimized charging schedule (demo)",
-  "method": "Reinforcement Learning (planned)"
-}
-```
-
-👉 This demonstrates the working pipeline. Advanced RL optimization will be integrated in future stages.
-
-### ✅ Expected Output
-
-```json
-{
-  "easy": 0.60,
-  "medium": 0.36,
-  "hard": 0.25
-}
-```
 
 ### 📸 Output Screenshot
 
-![Output Screenshot](image-1.png)
+![Output Screenshot](image.png)

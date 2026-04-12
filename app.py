@@ -1,4 +1,4 @@
-# judges.comments: Hugging Face UI
+# Hugging Face UI
 
 import gradio as gr
 from inference import run_inference

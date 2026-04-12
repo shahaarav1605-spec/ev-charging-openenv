@@ -1,4 +1,4 @@
-# judges.comments: EV Charging Optimization Agent (Final Enhanced)
+# EV Charging Optimization Agent.
 
 import sys
 import os
@@ -141,4 +141,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
