@@ -31,9 +31,10 @@ def root_post():
 @app.post("/reset")
 def reset():
     return {
-        "observation": {"msg": "reset"},
+        "observation": {},
         "reward": 0.0,
-        "done": False,
+        "terminated": False,
+        "truncated": False,
         "info": {}
     }
 
@@ -41,9 +42,10 @@ def reset():
 @app.post("/step")
 def step():
     return {
-        "observation": {"msg": "step"},
+        "observation": {},
         "reward": 0.1,
-        "done": False,
+        "terminated": False,
+        "truncated": False,
         "info": {}
     }
 
