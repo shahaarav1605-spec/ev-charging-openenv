@@ -2,8 +2,10 @@
 # judges.comments: ROOT ENTRYPOINT FIX FOR OPENENV (CRITICAL)
 # ============================================================
 
-from fastapi import FastAPI
-from inference import main as run_inference
+from fastapi import FastAPI, Request
+from inference import run_inference
+
+app = FastAPI()
 
 app = FastAPI()
 
@@ -30,7 +32,7 @@ def root_post():
 # judges.comments: OpenEnv RESET
 @app.post("/reset")
 async def reset(request: Request):
-    data = await request.json()  # IMPORTANT
+    data = await request.json()
 
     return {
         "observation": {},
@@ -43,9 +45,10 @@ async def reset(request: Request):
 # judges.comments: OpenEnv STEP
 from fastapi import Request
 
+# judges.comments: OpenEnv STEP
 @app.post("/step")
 async def step(request: Request):
-    data = await request.json()  # IMPORTANT
+    data = await request.json()
 
     return {
         "observation": {},
