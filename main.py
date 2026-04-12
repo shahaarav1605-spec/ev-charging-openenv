@@ -29,7 +29,9 @@ def root_post():
 
 # judges.comments: OpenEnv RESET
 @app.post("/reset")
-def reset():
+async def reset(request: Request):
+    data = await request.json()  # IMPORTANT
+
     return {
         "observation": {},
         "reward": 0.0,
@@ -39,8 +41,12 @@ def reset():
     }
 
 # judges.comments: OpenEnv STEP
+from fastapi import Request
+
 @app.post("/step")
-def step():
+async def step(request: Request):
+    data = await request.json()  # IMPORTANT
+
     return {
         "observation": {},
         "reward": 0.1,
