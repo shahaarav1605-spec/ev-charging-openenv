@@ -1,4 +1,4 @@
-# judges.comments: Hugging Face demo interface
+# judges.comments: Hugging Face UI
 
 import gradio as gr
 from inference import run_inference
@@ -8,24 +8,23 @@ def run_simulation():
     results = run_inference()
 
     explanation = """
-    🚀 EV Charging Optimization Agent
+🚀 EV Charging Optimization Agent
 
-    Strategy:
-    - Dynamic pricing + power allocation
-    - Queue-aware optimization
-    - Load balancing under high demand
-    - Time-based (solar window) optimization
+✔ Dynamic pricing & power control
+✔ Queue-aware decision making
+✔ Overload handling
+✔ Time-based optimization
 
-    Goal:
-    Maximize throughput while minimizing wait time & overload
-    """
+Goal:
+Maximize throughput while minimizing congestion
+"""
 
     return results, explanation
 
 
 with gr.Blocks() as demo:
     gr.Markdown("# ⚡ EV Charging Optimization Agent")
-    gr.Markdown("AI-based decision system for smart EV charging.")
+    gr.Markdown("Smart AI system for EV charging optimization")
 
     btn = gr.Button("🚀 Run Simulation")
 

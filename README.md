@@ -2,10 +2,9 @@
 title: EV Charging Optimization Agent
 emoji: ⚡
 colorFrom: blue
-colorTo: green
-sdk: docker
-app_port: 7860
-pinned: false
+colorTo: purple
+sdk: gradio
+app_file: app.py
 ---
 
 # ⚡ EV Charging Optimization Agent
