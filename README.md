@@ -210,8 +210,4 @@ http://localhost:8000/docs
 
 ### 📸 Output Screenshot
 
-![Output Screenshot](image-6.png)
-
-### 📸 Output Screenshot
-
 ![Output Screenshot](image-1.png)
