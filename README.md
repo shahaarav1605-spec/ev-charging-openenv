@@ -1,12 +1,11 @@
 ---
-title: EV Charging Optimization Agent
-emoji: ⚡
+title: "EV Charging Optimization Agent"
+emoji: "⚡"
 colorFrom: blue
 colorTo: purple
 sdk: gradio
 app_file: app.py
-----------------
-
+---
 
 ## ⚡ EV Charging Optimization Agent
 
